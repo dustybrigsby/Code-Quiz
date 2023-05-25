@@ -2,7 +2,7 @@
 const startPage = document.getElementById("start-page"),
   timer = document.getElementById("timer"),
   startBtn = document.getElementById("start-button"),
-  questions = document.getElementById("questions"),
+  quizzer = document.getElementById("quizzer"),
   question = document.getElementById("question"),
   options = document.getElementById("options"),
   endPage = document.getElementById("end-page"),
@@ -12,7 +12,7 @@ const startPage = document.getElementById("start-page"),
 let secondsLeft = 75,
   highScores = localStorage.getItem(highScores);
 
-// Make questions and answers into an object
+// Make questions and answers into objects
 const q1 = {
     question: "Commonly used data types DO NOT include:",
     options: ["strings", "booleans", "alerts", "numbers"],
@@ -55,13 +55,25 @@ const q1 = {
       "A very useful tool used during development and debugging for printing content to the debugger is:",
     options: ["JavaScript", "terminal/bash", "for loops", "console.log"],
     answer: 3,
-  };
+  },
+  // Put Q&A objects into array
+  questions = [q1, q2, q3, q4, q5];
 
 //
-function takeQuiz() {}
+function takeQuiz() {
+  // Hides startPage, shows questions
+  startPage.className("hidden");
+  questions.classList.remove("hidden");
 
-//
-function gameOver() {}
+  // Starts the quiz timer
+  setTime();
+}
+
+function gameOver() {
+  // Hides questions, shows endPage
+  questions.className("hidden");
+  endPage.classList.remove("hidden");
+}
 
 // Countdown timer, runs at 1 sec intervals starting at 75 secs
 function setTime() {
