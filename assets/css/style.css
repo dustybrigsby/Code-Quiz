@@ -39,7 +39,9 @@ input[type="text"] {
 }
 
 p {
+  width: 90%;
   padding: 20px 0;
+  margin: 0 auto;
 }
 
 ol {
