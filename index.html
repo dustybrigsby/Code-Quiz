@@ -13,10 +13,10 @@
   </head>
 
   <body>
-    <div class="high-scores">
+    <div id="high-scores">
       <a href="highscores.html">View High Scores</a>
     </div>
-    <div class="countdown">Time remaining: <span id="timer">0</span></div>
+    <div id="countdown">Time remaining: <span id="timer">0</span></div>
     <div class="container">
 
       <div id="start-page" class="start">
@@ -32,6 +32,7 @@
       <div id="quizzer" class="hidden">
         <h2 id="question"></h2>
         <div id="options" class="options"></div>
+        <h3 id="right-wrong"></h3>
       </div>
 
       <div id="end-page" class="hidden">
@@ -40,7 +41,7 @@
         <p>
           Enter initials:
           <input type="text" id="initials" max="3" />
-          <button id="submit-button">Submit</button>
+          <a href="highscores.html"><button id="submit-button">Submit</button></a>
         </p>
       </div>
 

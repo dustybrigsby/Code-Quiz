@@ -9,8 +9,11 @@ const startPage = document.getElementById("start-page"),
   score = document.getElementById("score"),
   initials = document.getElementById("initials"),
   submitBtn = document.getElementById("submit-button"),
-  highScores = [];
-let secondsLeft = 75,
+  rightWrong = document.getElementById("right-wrong"),
+  highScores = document.getElementById("high-scores"),
+  savedScores = [];
+let timerInterval,
+  secondsLeft = 75,
   questionNum = 0;
 
 //highScores = localStorage.getItem(highScores);
@@ -62,10 +65,24 @@ const q1 = {
   // Put Q&A objects into array
   questions = [q1, q2, q3, q4, q5];
 
+// Sets up local storage to use for high scores
+function goLocal() {
+  if (typeof Storage !== undefined) {
+    if (!localStorage.getItem("highScores")) {
+      localStorage.setItem("highScores", savedScores);
+    }
+  } else {
+    // No Web Storage support.
+  }
+}
+
 // Countdown timer, runs at 1 sec intervals starting at 75 secs
 function setTime() {
-  startQuiz();
-  let timerInterval = setInterval(function () {
+  // Hides startPage, shows questions
+  startPage.classList.add("hidden");
+  quizzer.classList.toggle("hidden");
+  setQuestion();
+  timerInterval = setInterval(function () {
     secondsLeft--;
     timer.textContent = secondsLeft;
 
@@ -77,49 +94,76 @@ function setTime() {
   }, 1000);
 }
 
-function startQuiz() {
-  if (questionNum === 0) {
-    // Hides startPage, shows questions
-    startPage.classList.add("hidden");
-    quizzer.classList.toggle("hidden");
-    setQuestion();
-  } else if (questionNum > 4) {
-    clearInterval(timerInterval);
-    score.textContent = secondsLeft;
-    gameOver();
-  }
-}
-
 // Iterates over questions array
 function setQuestion() {
+  // Removes previous question's options
+  while (options.children.length > 0) {
+    options.removeChild(options.firstChild);
+  }
   let choices = questions[questionNum].options;
+  // Writes question text to the page
+  question.textContent = questions[questionNum].question;
 
-  questions[questionNum].question;
-
+  // Creates buttons, adds options text, then adds them to options div
   for (let i = 0; i < choices.length; i++) {
     let btn = document.createElement("button");
-
-    btn.innerText(choices[i]);
+    btn.innerText = choices[i];
     options.appendChild(btn);
   }
 }
 
+// Checks to see if user's choice was correct or wrong
 function evaluate(e) {
   e.preventDefault();
-
   let choice = e.target.textContent;
 
-  if (choice === questions[questionNum]) {
+  // Let's user know if they got the question right or wrong
+  if (choice === questions[questionNum].answer) {
+    rightWrong.textContent = "Correct!";
+  } else {
+    rightWrong.textContent = "Wrong!";
+    secondsLeft = secondsLeft - 10;
   }
+  // Goes on to the next question
   questionNum++;
-  setQuestion();
+  // Checks to see if there are any further questions, game over if not
+  if (!questions[questionNum]) {
+    clearInterval(timerInterval);
+    score.textContent = secondsLeft;
+    gameOver();
+  } else {
+    setQuestion();
+  }
 }
 
+// Ends the quiz
 function gameOver() {
-  // Hides questions, shows endPage
+  // Hides questions and countdown timer, shows endPage
   quizzer.classList.toggle("hidden");
   endPage.classList.toggle("hidden");
+  document.getElementById("countdown").classList.add("hidden");
+
+  // Listen for click to enter initials for the high scores
+  submitBtn.addEventListener("click", saveScore);
 }
+
+function saveScore() {
+  let userScore = [initials.textContent, secondsLeft];
+  for (let i = 0; i < savedScores.length; i++) {
+    if (savedScores[i][1] < userScore[1]) {
+      savedScores.splice(i, 0, userScore);
+      if (savedScores.length > 10) {
+        savedScores.pop();
+      }
+      break;
+    }
+  }
+  localStorage.setItem("highScores", savedScores);
+
+
+}
+
+goLocal();
 
 // Listen for click to select answer to question
 options.addEventListener("click", evaluate);
