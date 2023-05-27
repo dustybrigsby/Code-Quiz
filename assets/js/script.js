@@ -141,12 +141,14 @@ function saveScore() {
     score: secondsLeft,
   };
 
+  // If no high score stored in local storage, creates it, adds user's score and goes to high scores page
   if (!localStorage.getItem("highScores")) {
-    localStorage.setItem("highScores", "");
+    localStorage.setItem("highScores", userScore);
+    document.location = "highscores.html";
   }
   const savedScores = JSON.parse(localStorage.getItem("highScores"));
 
-  console.log(userScore);
+  // console.log(userScore);
 
   if (!savedScores) {
     localStorage.setItem("highScores", JSON.stringify([userScore]));
