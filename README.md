@@ -2,7 +2,7 @@
 
 ## Description
 
-A timed quiz
+A timed quiz on Javascript.
 
 ## Installation
 
