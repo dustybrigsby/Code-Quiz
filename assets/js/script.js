@@ -166,10 +166,10 @@ function saveScore() {
     // Adds user score to bottom of list if less than 10 high scores
     if (savedScores.length < 10 && !savedScores.includes(userScore)) {
       savedScores.push(userScore);
+      localStorage.setItem("highScores", JSON.stringify(savedScores));
     }
-
-    localStorage.setItem("highScores", JSON.stringify(savedScores));
   }
+  document.location = "highscores.html";
 }
 
 // Listen for click to enter initials for the high scores
