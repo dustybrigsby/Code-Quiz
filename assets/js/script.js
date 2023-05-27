@@ -134,6 +134,7 @@ function gameOver() {
   document.getElementById("countdown").classList.add("hidden");
 }
 
+// Saves the user's initials and score in local storage
 function saveScore() {
   const userScore = {
     initials: initials.value.toUpperCase(),
