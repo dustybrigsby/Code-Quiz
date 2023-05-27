@@ -143,39 +143,35 @@ function saveScore() {
 
   // If no high score stored in local storage, creates it, adds user's score and goes to high scores page
   if (!localStorage.getItem("highScores")) {
-    localStorage.setItem("highScores", userScore);
+    localStorage.setItem("highScores", JSON.stringify([userScore]));
     document.location = "highscores.html";
+    return;
   }
   const savedScores = JSON.parse(localStorage.getItem("highScores"));
 
-  // console.log(userScore);
-
-  if (!savedScores) {
-    localStorage.setItem("highScores", JSON.stringify([userScore]));
-  } else {
-    // Adds user's score to high scores if it is within the top ten
-    for (let i = 0; i < savedScores.length; i++) {
-      if (savedScores[i].score < userScore.score) {
-        savedScores.splice(i, 0, userScore);
-        if (savedScores.length > 10) {
-          savedScores.pop();
-        }
-        break;
-      } else if (savedScores[i].score === userScore.score) {
-        savedScores.splice(i + 1, 0, userScore);
-        if (savedScores.length > 10) {
-          savedScores.pop();
-        }
-        break;
+  // Adds user's score to high scores if it is within the top ten
+  for (let i = 0; i < savedScores.length; i++) {
+    if (savedScores[i].score < userScore.score) {
+      savedScores.splice(i, 0, userScore);
+      if (savedScores.length > 10) {
+        savedScores.pop();
       }
-    }
-
-    // Adds user score to bottom of list if less than 10 high scores
-    if (savedScores.length < 10 && !savedScores.includes(userScore)) {
-      savedScores.push(userScore);
-      localStorage.setItem("highScores", JSON.stringify(savedScores));
+      break;
+    } else if (savedScores[i].score === userScore.score) {
+      savedScores.splice(i + 1, 0, userScore);
+      if (savedScores.length > 10) {
+        savedScores.pop();
+      }
+      break;
     }
   }
+  
+  // Adds user score to bottom of list if less than 10 high scores
+  if (savedScores.length < 10 && !savedScores.includes(userScore)) {
+    savedScores.push(userScore);
+    localStorage.setItem("highScores", JSON.stringify(savedScores));
+  }
+
   document.location = "highscores.html";
 }
 
