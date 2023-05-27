@@ -2,7 +2,7 @@
 
 ## Description
 
-A timed quiz 
+A timed quiz
 
 ## Installation
 
@@ -10,7 +10,9 @@ No installation requirements.
 
 ## Usage
 
-Click the Generate Password button and make selections for what to include in password using the window prompts.
+Click the "Start Quiz" button to start a timed quiz with questions about JavaScript.
+Your score is how much time you have remaining when all the questions have been answered.
+But look out! Every wrong answer will deduct 10 seconds from the time!
 
 ## Credits
 
@@ -19,11 +21,9 @@ Extentensively used the references and tutorials from:
 - [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 - [W3 Schools](https://www.w3schools.com/jsref/default.asp)
 
-Instructor Ed Fallen helped with getting the HTML and CSS structure during office hours.
+Instructor Ed Fallen and TA Alex Sigala helped with getting the HTML and CSS structure during office hours.
 
-Referenced activities from 04-Web-APIs:
-
-- setTime function > 09-Ins_Timers-Intervals
+Referenced multiple activities from 04-Web-APIs.
 
 ## License
 
