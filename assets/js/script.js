@@ -142,7 +142,7 @@ function saveScore() {
   };
 
   if (!localStorage.getItem("highScores")) {
-    localStorage.setItem("highScores");
+    localStorage.setItem("highScores", "");
   }
   const savedScores = JSON.parse(localStorage.getItem("highScores"));
 
