@@ -1,106 +1,96 @@
 // Get DOM elements to be used set as global variables
-const startPage = document.getElementById("start-page"),
-  timer = document.getElementById("timer"),
-  startBtn = document.getElementById("start-button"),
-  quizzer = document.getElementById("quizzer"),
-  question = document.getElementById("question"),
-  options = document.getElementById("options"),
-  endPage = document.getElementById("end-page"),
-  score = document.getElementById("score"),
-  initials = document.getElementById("initials"),
-  submitBtn = document.getElementById("submit-button"),
-  rightWrong = document.getElementById("right-wrong"),
-  highScores = document.getElementById("high-scores"),
-  savedScores = [];
-let timerInterval,
-  secondsLeft = 75,
-  questionNum = 0;
+const startPage = document.getElementById("start-page");
+const timer = document.getElementById("timer");
+const startBtn = document.getElementById("start-button");
+const quizzer = document.getElementById("quizzer");
+const question = document.getElementById("question");
+const options = document.getElementById("options");
+const endPage = document.getElementById("end-page");
+const score = document.getElementById("score");
+const initials = document.getElementById("initials");
+const submitBtn = document.getElementById("submit-button");
+const rightWrong = document.getElementById("right-wrong");
+const highScores = document.getElementById("high-scores");
+let timerInterval;
+let secondsLeft = 75;
+let questionNum = 0;
 
 //highScores = localStorage.getItem(highScores);
 
 // Make questions and answers into objects
 const q1 = {
-    question: "Commonly used data types DO NOT include:",
-    options: ["strings", "booleans", "alerts", "numbers"],
-    answer: "alerts",
-  },
-  q2 = {
-    question:
-      "The condition in an if/else statement is enclosed within _____.",
-    options: [
-      "quotes",
-      "braces (curly brackets)",
-      "parentheses",
-      "brackets (square/box brackets)",
-    ],
-    answer: "parentheses",
-  },
-  q3 = {
-    question: "Arrays in JavaScript can be used to store _____.",
-    options: [
-      "numbers and strings",
-      "other arrays",
-      "booleans",
-      "all of the above",
-    ],
-    answer: "all of the above",
-  },
-  q4 = {
-    question:
-      "String values must be enclosed within _____ when being assigned to variables.",
-    options: [
-      "commas",
-      "braces (curly brackets)",
-      "quotes",
-      "parentheses",
-    ],
-    answer: "quotes",
-  },
-  q5 = {
-    question:
-      "A very useful tool used during development and debugging for printing content to the debugger is:",
-    options: ["JavaScript", "terminal/bash", "for loops", "console.log"],
-    answer: "console.log",
-  },
-  // Put Q&A objects into array
-  questions = [q1, q2, q3, q4, q5];
-
-// Sets up local storage to use for high scores
-function goLocal() {
-  if (typeof Storage !== undefined) {
-    if (!localStorage.getItem("highScores")) {
-      localStorage.setItem("highScores", savedScores);
-    }
-  } else {
-    // No Web Storage support.
-  }
-}
+  question: "Commonly used data types DO NOT include:",
+  options: ["strings", "booleans", "alerts", "numbers"],
+  answer: "alerts",
+};
+const q2 = {
+  question:
+    "The condition in an if/else statement is enclosed within _____.",
+  options: [
+    "quotes",
+    "braces (curly brackets)",
+    "parentheses",
+    "brackets (square/box brackets)",
+  ],
+  answer: "parentheses",
+};
+const q3 = {
+  question: "Arrays in JavaScript can be used to store _____.",
+  options: [
+    "numbers and strings",
+    "other arrays",
+    "booleans",
+    "all of the above",
+  ],
+  answer: "all of the above",
+};
+const q4 = {
+  question:
+    "String values must be enclosed within _____ when being assigned to variables.",
+  options: ["commas", "braces (curly brackets)", "quotes", "parentheses"],
+  answer: "quotes",
+};
+const q5 = {
+  question:
+    "A very useful tool used during development and debugging for printing content to the debugger is:",
+  options: ["JavaScript", "terminal/bash", "for loops", "console.log"],
+  answer: "console.log",
+};
+// Put Q&A objects into array
+const questions = [q1, q2, q3, q4, q5];
 
 // Countdown timer, runs at 1 sec intervals starting at 75 secs
 function setTime() {
   // Hides startPage, shows questions
   startPage.classList.add("hidden");
   quizzer.classList.toggle("hidden");
+
   setQuestion();
+
+  // Starts the countdown timer
   timerInterval = setInterval(function () {
     secondsLeft--;
     timer.textContent = secondsLeft;
 
+    // Game over if time runs out
     if (secondsLeft === 0) {
       clearInterval(timerInterval);
       score.textContent = secondsLeft;
+
       gameOver();
     }
   }, 1000);
 }
 
-// Iterates over questions array
+// Iterates over questions array to display them in order
 function setQuestion() {
+  let choices = questions[questionNum].options;
+
   // Removes previous question's options
-  while (options.children.length > 0) {
+  while (options.children.length) {
     options.removeChild(options.firstChild);
   }
-  let choices = questions[questionNum].options;
+
   // Writes question text to the page
   question.textContent = questions[questionNum].question;
 
@@ -142,28 +132,48 @@ function gameOver() {
   quizzer.classList.toggle("hidden");
   endPage.classList.toggle("hidden");
   document.getElementById("countdown").classList.add("hidden");
-
-  // Listen for click to enter initials for the high scores
-  submitBtn.addEventListener("click", saveScore);
 }
 
 function saveScore() {
-  let userScore = [initials.textContent, secondsLeft];
-  for (let i = 0; i < savedScores.length; i++) {
-    if (savedScores[i][1] < userScore[1]) {
-      savedScores.splice(i, 0, userScore);
-      if (savedScores.length > 10) {
-        savedScores.pop();
+  const userScore = {
+    initials: initials.value.toUpperCase(),
+    score: secondsLeft,
+  };
+  const savedScores = JSON.parse(localStorage.getItem("highScores"));
+
+  console.log(userScore);
+
+  if (!savedScores) {
+    localStorage.setItem("highScores", JSON.stringify([userScore]));
+  } else {
+    // Adds user's score to high scores if it is within the top ten
+    for (let i = 0; i < savedScores.length; i++) {
+      if (savedScores[i].score < userScore.score) {
+        savedScores.splice(i, 0, userScore);
+        if (savedScores.length > 10) {
+          savedScores.pop();
+        }
+        break;
+      } else if (savedScores[i].score === userScore.score) {
+        savedScores.splice(i + 1, 0, userScore);
+        if (savedScores.length > 10) {
+          savedScores.pop();
+        }
+        break;
       }
-      break;
     }
+
+    // Adds user score to bottom of list if less than 10 high scores
+    if (savedScores.length < 10 && !savedScores.includes(userScore)) {
+      savedScores.push(userScore);
+    }
+
+    localStorage.setItem("highScores", JSON.stringify(savedScores));
   }
-  localStorage.setItem("highScores", savedScores);
-
-
 }
 
-goLocal();
+// Listen for click to enter initials for the high scores
+submitBtn.addEventListener("click", saveScore);
 
 // Listen for click to select answer to question
 options.addEventListener("click", evaluate);

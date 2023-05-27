@@ -1,19 +1,31 @@
 const clearScoresBtn = document.getElementById("clear-scores");
+const list = document.getElementById("high-scores-list");
+let savedScores = JSON.parse(localStorage.getItem("highScores"));
 
 function showScores() {
-  let savedScores = localStorage.getItem("high-scores");
+  console.log("savedScores: " + savedScores);
+  // console.log("list: " + list);
 
-  savedScores.forEach((entry) => {
-    let x = document.createElement("li");
-    x.textContent = entry[0] + " ----- " + entry[1];
-    document.getElementById("high-score").appendChild(x);
-  });
+  if (savedScores === null) {
+    let listItem = document.createElement("li");
+    listItem.textContent = "No high scores yet!";
+    // console.log("listItem: " + listItem);
+    list.appendChild(listItem);
+  } else {
+    // Makes list item for each high score entry
+    savedScores.forEach((entry) => {
+      let listItem = document.createElement("li");
+      listItem.textContent = entry.initials + " ----- " + entry.score;
+      list.appendChild(listItem);
+    });
+  }
 }
 
 function clearScores() {
-  let list = document.getElementById("high-score");
-  while (list.children.length > 0) {
-    list.removeChild(list.firstChild);
+  if (list) {
+    while (list.children.length) {
+      list.removeChild(list.firstChild);
+    }
   }
   localStorage.removeItem("highScores");
 }
